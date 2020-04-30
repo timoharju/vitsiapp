@@ -44,7 +44,7 @@ export class VitsiForm extends Component {
   };
   render() {
     return (
-      <Grid container className="vF-container">
+      <Grid container className="VF-container">
         <Grid item sm>
           <Typography variant="body1">
             Tähän voit kirjoittaa oman vitsisi. Vitsisi saa olla enintään 160
