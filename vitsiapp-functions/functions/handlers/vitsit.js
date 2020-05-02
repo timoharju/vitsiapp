@@ -43,36 +43,7 @@ exports.postOneVitsi = (req, res) => {
       res.status(500).json({ error: "something went wrong" });
     });
 };
-/*
-exports.getOneVitsi = (req, res) => {
-  let vitsiData = {};
-  db.doc(`/vitsit/${req.params.vitsiId}`)
-    .get()
-    .then(doc => {
-      if (!doc.exists) {
-        return res.status(404).json({ error: "Vitsi not found" });
-      }
-      vitsiData = doc.data();
-      vitsiData.vitsiId = doc.id;
-      return db
-        .collection("vitsit")
-        .orderBy("createdAt", "desc")
-        .where("vitsiId", "==", req.params.vitsiId)
-        .get();
-    })
-    .then(data => {
-      vitsiData.vitsit = [];
-      data.forEach(doc => {
-        vitsiData.vitsit.push(doc.data());
-      });
-      return res.json(vitsiData);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: err.code });
-    });
-};
-*/
+
 exports.getVitsiVote = (req, res) => {
   let vitsiData = {};
   db.doc(`/vitsit/${req.params.vitsiId}`)
@@ -209,6 +180,29 @@ exports.unVoteVitsi = (req, res) => {
             res.json(vitsiData);
           });
       }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: err.code });
+    });
+};
+
+exports.randomVitsi = (req, res) => {
+  db.collection("vitsit")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((data) => {
+      let vitsit = [];
+      data.forEach((doc) => {
+        vitsit.push({
+          vitsiId: doc.id,
+          body: doc.data().body,
+          createdAt: doc.data().createdAt,
+          voteCount: doc.data().voteCount,
+        });
+      });
+      var ranVitsi = vitsit[Math.floor(Math.random()*vitsit.length)];
+      return res.json(ranVitsi);
     })
     .catch((err) => {
       console.error(err);

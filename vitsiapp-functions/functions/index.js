@@ -8,8 +8,7 @@ const { db } = require("./utils/admin");
 
 const {
     getAllVitsit,
-    getOneVitsi,
-    getVitsiVote,
+    randomVitsi,
     postOneVitsi,
     voteVitsi,
     unVoteVitsi
@@ -17,8 +16,8 @@ const {
 } = require("./handlers/vitsit");
 
 app.get("/vitsit", getAllVitsit)
-app.get("/vitsit/:vitsiId", getOneVitsi)
-app.get("/vitsit/:vitsiId", getVitsiVote)
+
+app.get("/vitsit/random", randomVitsi)
 app.post("/vitsit", postOneVitsi) 
 app.get("/vitsit/:vitsiId/vote", voteVitsi)
 app.get("/vitsit/:vitsiId/unvote", unVoteVitsi)

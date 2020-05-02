@@ -1,31 +1,102 @@
 import React, { Component } from "react";
+import axios from "axios";
 
-import relativeTime from "dayjs/plugin/relativeTime"
-//@ts-ignore
-import dayjs from "dayjs";
+//Material-ui
+import Button from "@material-ui/core/Button";
+import { Typography } from "@material-ui/core";
+import Container from "@material-ui/core/Grid";
 
+export class VitsiBox extends Component {
+  constructor(props) {
+    super(props);
 
-//Material UI
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+    this.state = {
+      data: "",
+      fetchIsLoading: false,
+      voteIsLoading: false,
+      count: 0,
+    };
+    this.fetchclick = this.fetchclick.bind(this);
+    this.voteclick = this.voteclick.bind(this);
+  }
 
-export class vitsiBox extends Component {
+  componentDidMount() {
+    axios
+      .get(
+        "https://europe-west1-vitsi-app-80584.cloudfunctions.net/api/vitsit/random"
+      )
+      .then((res) => {
+        this.setState({
+          data: res.data,
+          fetchIsLoading: false,
+          voteIsLoading: false,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+  voteclick() {
+    axios
+      .get(
+        `https://europe-west1-vitsi-app-80584.cloudfunctions.net/api/vitsit/${this.state.data.vitsiId}/vote`,
+        {}
+      )
+      .then(() => {
+        this.setState({ voteIsLoading: true, count: this.state.count + 1 });
+      })
+
+      .catch((err) => console.log(err));
+
+    alert("Peukutit vitsiä");
+  }
+
+  fetchclick() {
+    this.setState({ fetchIsLoading: true });
+    axios
+      .get(
+        "https://europe-west1-vitsi-app-80584.cloudfunctions.net/api/vitsit/random",
+        {}
+      )
+      .then((response) => {
+        this.setState({
+          data: response.data,
+          fetchIsLoading: false,
+          voteIsLoading: false,
+          count: 0,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          data: err,
+          fetchIsLoading: false,
+          voteIsLoading: false,
+        });
+      });
+  }
+
   render() {
-    dayjs.extend(relativeTime)
-    const {
-      vitsi: { body, voteCount, createdAt },
-    } = this.props;
     return (
-      <Card>
-        <CardContent>
-          <Typography variant="h5">{body}</Typography>
-          <Typography variant="h7">{voteCount} Tykkäystä</Typography>
-          <Typography variant="body1">{dayjs(createdAt).fromNow()}</Typography>
-        </CardContent>
-      </Card>
+      <Container classname="BC-container">
+        <Button
+          color="primary"
+          onClick={this.voteclick}
+          disabled={this.state.voteIsLoading}
+        >
+          Peukuta 👍
+        </Button>
+        <Button
+          color="secondary"
+          onClick={this.fetchclick}
+          disabled={this.state.fetchIsLoading}
+        >
+          Uusi vitsi🔁
+        </Button>
+        <Typography>{this.state.data.body}</Typography>
+        <Typography>
+          {this.state.data.voteCount + this.state.count} 👍
+        </Typography>
+      </Container>
     );
   }
 }
 
-export default vitsiBox;
+export default VitsiBox;

@@ -4,15 +4,14 @@ html {
   height: 100%;
 }
 
-.mb-3 {
-  text-align: center;
-  margin: auto;
-  margin-top: 30%;
-  width: 50%;
-  padding: 10px;
-} 
-
-.VF-container {
-  padding: 50px;
+.MuiGrid-root {
+  padding: 5%;
   text-align: center;
 }
+
+.VF-container {
+  margin-top: 15%;
+  padding: 50px;
+}
+
+

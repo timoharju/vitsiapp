@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 
 //MaterialUI
-import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 import { Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -15,6 +15,7 @@ export class VitsiForm extends Component {
       body: "",
     };
   }
+
   handleSubmit = (event) => {
     event.preventDefault();
     const vitsiData = {
@@ -27,14 +28,16 @@ export class VitsiForm extends Component {
       )
       .then((res) => {
         console.log(res.data);
-        this.setState({
-          loading: false,
-        });
         this.props.history.push("/");
       })
       .catch((err) => {
         console.log(err);
       });
+
+    alert("Vitsi lähetetty");
+    this.setState({
+      body: "",
+    });
   };
 
   handleChange = (event) => {
@@ -44,37 +47,37 @@ export class VitsiForm extends Component {
   };
   render() {
     return (
-      <Grid container className="VF-container">
-        <Grid item sm>
-          <Typography variant="body1">
-            Tähän voit kirjoittaa oman vitsisi. Vitsisi saa olla enintään 160
-            kirjainmerkin pituinen.:
-          </Typography>
-          <form noValidate onSubmit={this.handleSubmit}>
-            <TextField 
-              multiline
-              rows={2}
-              rowsMax={4}
-              id="body"
-              name="body"
-              type="body"
-              label="Kirjoita vitsisi tähän"
-              value={this.state.body}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className="buttonF"
-            >
-              Lähetä
-            </Button>
-          </form>
-        </Grid>
-        <Grid item sm />
-      </Grid>
+      <Container className="VF-container">
+        <Typography variant="body1">
+          Tähän voit kirjoittaa oman vitsisi. Vitsisi saa olla enintään 160
+          kirjainmerkin pituinen.
+        </Typography>
+        <form noValidate onSubmit={this.handleSubmit}>
+          <TextField
+          inputProps={{
+            maxLength: 160,
+          }}
+            maxLength="2"
+            multiline
+            rows={2}
+            rowsMax={4}
+            id="body"
+            name="body"
+            type="body"
+            value={this.state.body}
+            onChange={this.handleChange}
+            fullWidth
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className="buttonF"
+          >
+            Lähetä
+          </Button>
+        </form>
+      </Container>
     );
   }
 }
